@@ -1,4 +1,6 @@
 best <- function(state, outcome) {
+	states <- read.csv("hospital-data.csv")
+	outcome <- read.csv("outcome-of-care-measures.csv")
 	if(!any(unique(states[,"State"]) == state)){
 		stop("invalid state")
 	}
@@ -6,7 +8,7 @@ best <- function(state, outcome) {
 ## Check that state and outcome are valid
 ## Return hospital name in that state with lowest 30-day death
 ## rate
-
+summary(outcome)
 
 
 }
