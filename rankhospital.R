@@ -1,4 +1,11 @@
-best <- function(state, outcome) {
+rankhospital <- function(state, outcome, num = "best") {
+## Read outcome data
+## Check that state and outcome are valid
+## Return hospital name in that state with the given rank
+## 30-day death rate
+
+
+	
 	states <- read.csv("hospital-data.csv", colClasses = "character")
 	outcomes <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
 	if(is.na(state) | !any(states[,"State"] == state)){
@@ -19,22 +26,30 @@ best <- function(state, outcome) {
 	somenteEstado <- outcomeByStates[[state]]
 
 	somenteNomesEstado <- somenteEstado[[2]][!is.na(as.numeric(somenteEstado[[numberOutcome]]))]
+	#print(somenteNomesEstado)
 	somenteOutcomeEstado <- as.numeric(somenteEstado[[numberOutcome]][!is.na(as.numeric(somenteEstado[[numberOutcome]]))])
+#	print(somenteOutcomeEstado)
 	
-
-	saomenores <- somenteOutcomeEstado ==  min(somenteOutcomeEstado)
-	sortedResults <- sort(somenteNomesEstado[saomenores])
-	sortedResults[1]
-
-## Read outcome data
-## Check that state and outcome are valid
-## Return hospital name in that state with lowest 30-day death
-## rate
-#summary(outcome)
+	if(num == "best"){
+		num <- 1
+	}
+	if(num == "worst"){
+		num <- length(somenteNomesEstado)
+	}
 
 
+	ranks <- ave(as.numeric(somenteOutcomeEstado), FUN=sort)
+#	print(ranks)
+	resposta <- somenteEstado[[2]][somenteEstado[[numberOutcome]] == ranks[num]]
+	resposta <- sort(resposta)
+	
+	if(length(resposta[length(resposta)]) ==0) {
+		NA
+	}else{
+		resposta[length(resposta)]
+	}
+	
 }
-
 returnNumberOutcome <- function(outcomeName){
 	retorno <- 0
 	if(outcomeName == "heart attack"){
@@ -47,15 +62,4 @@ returnNumberOutcome <- function(outcomeName){
 		retorno <- 17
 	}
 	retorno
-}
-
-
-
-
-rankall <- function(outcome, num = "best") {
-## Read outcome data
-## Check that state and outcome are valid
-## For each state, find the hospital of the given rank
-## Return a data frame with the hospital names and the
-## (abbreviated) state name
 }
